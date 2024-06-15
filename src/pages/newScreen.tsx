@@ -29,9 +29,6 @@ const CommandMenu: React.FC = () => {
     <CommandDialog open={open} onOpenChange={setOpen}>
       <div className="relative">
         <CommandInput placeholder="Type a command or search..." />
-        <div className="absolute right-4 top-4 text-gray-400 text-xs">
-          Cmd + K
-        </div>
       </div>
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
