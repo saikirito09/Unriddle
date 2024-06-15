@@ -39,13 +39,18 @@ const MainContent: React.FC<MainContentProps> = ({
     navigate("/import");
   };
 
+  // Get the first word of the user's display name
+  const firstName = user?.displayName?.split(" ")[0] || "";
+
   return (
     <div
       className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
     >
       <div className="mx-auto max-w-3xl my-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-medium">Welcome to Unriddle</h1>
+          <h1 className="text-4xl font-medium">
+            {user ? `Welcome back, ${firstName}` : "Welcome to Unriddle"}
+          </h1>
           <p className="text-xl text-gray-500">
             Import a document to understand its contents or start writing in a
             new note.
