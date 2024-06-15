@@ -9,7 +9,7 @@ const NewScreen: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [dialogType, setDialogType] = useState<"signUp" | "logIn" | null>(null);
-  const [view, setView] = useState<"default" | "import">("default");
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with your actual login state logic
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -17,10 +17,6 @@ const NewScreen: React.FC = () => {
 
   const toggleSettings = () => {
     setIsSettingsOpen(!isSettingsOpen);
-  };
-
-  const handleImportClick = () => {
-    setView("import");
   };
 
   return (
@@ -34,12 +30,14 @@ const NewScreen: React.FC = () => {
         <Sidebar
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
-          handleImportClick={handleImportClick}
+          setDialogType={setDialogType}
+          isLoggedIn={isLoggedIn}
         />
         <MainContent
           isSidebarOpen={isSidebarOpen}
           isSettingsOpen={isSettingsOpen}
-          view={view}
+          setDialogType={setDialogType}
+          isLoggedIn={isLoggedIn}
         />
       </div>
       <SettingsPanel isSettingsOpen={isSettingsOpen} />

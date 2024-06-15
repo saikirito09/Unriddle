@@ -10,6 +10,7 @@ const ImportScreen: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [dialogType, setDialogType] = useState<"signUp" | "logIn" | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with your actual login state logic
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -27,7 +28,12 @@ const ImportScreen: React.FC = () => {
         setDialogType={setDialogType}
       />
       <div className="flex flex-1 mt-14">
-        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          setDialogType={setDialogType}
+          isLoggedIn={isLoggedIn}
+        />
         <div
           className={`flex-1 p-6 transition-all duration-300 ${
             isSidebarOpen ? "ml-64" : ""

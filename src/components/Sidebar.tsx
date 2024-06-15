@@ -13,10 +13,27 @@ import { ChevronsLeft, Pencil, Upload, Search } from "lucide-react";
 interface SidebarProps {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
+  setDialogType: React.Dispatch<
+    React.SetStateAction<"signUp" | "logIn" | null>
+  >;
+  isLoggedIn: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isSidebarOpen,
+  toggleSidebar,
+  setDialogType,
+  isLoggedIn,
+}) => {
   const navigate = useNavigate();
+
+  const handleWriteClick = () => {
+    if (!isLoggedIn) {
+      setDialogType("logIn");
+    } else {
+      // Handle the write action here if the user is logged in
+    }
+  };
 
   const handleImportClick = () => {
     navigate("/import");
@@ -51,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-48 mx-4">
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleWriteClick}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Write
               </DropdownMenuItem>
