@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,14 +16,28 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
+  const navigate = useNavigate();
+
+  const handleImportClick = () => {
+    navigate("/import");
+  };
+
+  const handleUnriddleClick = () => {
+    navigate("/new");
+  };
+
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 z-30 flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div className="flex justify-between items-center mb-4">
-        <a href="/" className="text-2xl font-bold">
+        <button
+          type="button"
+          className="text-2xl font-bold cursor-pointer"
+          onClick={handleUnriddleClick}
+        >
           unriddle
-        </a>
+        </button>
         <Button variant="ghost" className="text-xl" onClick={toggleSidebar}>
           <ChevronsLeft className="h-6 w-6" />
         </Button>
@@ -40,9 +55,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
                 <Pencil className="mr-2 h-4 w-4" />
                 Write
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleImportClick}>
                 <Upload className="mr-2 h-4 w-4" />
-                Upload
+                Import
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Pencil, Upload } from "lucide-react";
 import {
   Command,
@@ -8,11 +9,23 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+// import { Button } from "@/components/ui/button";
 
-const MainContent: React.FC<{
+interface MainContentProps {
   isSidebarOpen: boolean;
   isSettingsOpen: boolean;
-}> = ({ isSidebarOpen, isSettingsOpen }) => {
+}
+
+const MainContent: React.FC<MainContentProps> = ({
+  isSidebarOpen,
+  isSettingsOpen,
+}) => {
+  const navigate = useNavigate();
+
+  const handleImportClick = () => {
+    navigate("/import");
+  };
+
   return (
     <div
       className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
@@ -33,7 +46,10 @@ const MainContent: React.FC<{
               <p>Create a new note</p>
             </div>
           </div>
-          <div className="relative flex flex-col items-start justify-between p-4 h-36 rounded-2xl border cursor-pointer transition-transform duration-150 bg-white hover:border-black">
+          <div
+            className="relative flex flex-col items-start justify-between p-4 h-36 rounded-2xl border cursor-pointer transition-transform duration-150 bg-white hover:border-black"
+            onClick={handleImportClick}
+          >
             <Upload className="h-5 w-5 absolute top-4 left-4" />
             <div className="mt-12">
               <h2 className="font-semibold text-lg">Import</h2>
