@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import CommandMenu from "../components/CommandMenu";
 import {
   Command,
   CommandInput,
@@ -7,54 +8,7 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-  CommandDialog,
 } from "@/components/ui/command";
-import { Progress } from "@/components/ui/progress";
-
-const CommandMenu: React.FC = () => {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
-
-  return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <div className="relative">
-        <CommandInput placeholder="Type a command or search..." />
-      </div>
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Documents">
-          <CommandItem>GDPR - Official Legal Text</CommandItem>
-          <CommandItem>The Mechanism of Nuclear Fission</CommandItem>
-          <CommandItem>The Network State</CommandItem>
-          <CommandItem>HST star-forming Trails</CommandItem>
-          <CommandItem>Possible Existence of a Neutron</CommandItem>
-          <CommandItem>Welcome!</CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
-  );
-};
-
-export function ProgressDemo() {
-  const [progress, setProgress] = React.useState(13);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} className="w-full" />;
-}
 
 const NewScreen: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -133,9 +87,7 @@ const NewScreen: React.FC = () => {
       <div className="flex flex-1 mt-14">
         {/* Sidebar */}
         <div
-          className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 z-30 flex flex-col ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 z-30 flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
           <div className="flex justify-between items-center mb-4">
             <a href="/" className="text-2xl font-bold">
@@ -193,9 +145,7 @@ const NewScreen: React.FC = () => {
 
         {/* Main Content */}
         <div
-          className={`flex-1 p-6 transition-all duration-300 ${
-            isSidebarOpen ? "ml-64" : ""
-          } ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
+          className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
         >
           <div className="mx-auto max-w-3xl my-10">
             <div className="mb-8">
@@ -272,9 +222,7 @@ const NewScreen: React.FC = () => {
         </div>
       </div>
       <div
-        className={`fixed top-14 right-0 h-full w-64 bg-white border-t border-l border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${
-          isSettingsOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-14 right-0 h-full w-64 bg-white border-t border-l border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${isSettingsOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-medium text-sm text-gray-500">SETTINGS</h2>
@@ -285,12 +233,6 @@ const NewScreen: React.FC = () => {
             <li className="font-normal text-xs text-black">GPT-4</li>
           </ul>
         </div>
-        {/* <div className="mt-6">
-          <p className="font-normal text-sm text-black">Max Length</p>
-          <div className="w-full">
-            <ProgressDemo />
-          </div>
-        </div> */}
       </div>
 
       <CommandMenu />
