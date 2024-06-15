@@ -45,7 +45,26 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      // Add hover class to change the opacity of the icon
+      onMouseEnter={() => {
+        document
+          .getElementById("chevrons-left-icon")
+          ?.classList.remove("opacity-0");
+        document
+          .getElementById("chevrons-left-icon")
+          ?.classList.add("opacity-100");
+      }}
+      onMouseLeave={() => {
+        document
+          .getElementById("chevrons-left-icon")
+          ?.classList.remove("opacity-100");
+        document
+          .getElementById("chevrons-left-icon")
+          ?.classList.add("opacity-0");
+      }}
     >
       <div className="flex justify-between items-center mb-4">
         <button
@@ -56,13 +75,19 @@ const Sidebar: React.FC<SidebarProps> = ({
           unriddle
         </button>
         <Button variant="ghost" className="text-xl" onClick={toggleSidebar}>
-          <ChevronsLeft className="h-6 w-6" />
+          <ChevronsLeft
+            id="chevrons-left-icon"
+            className="h-6 w-6 text-gray-500 transition-opacity duration-300 opacity-0"
+          />
         </Button>
       </div>
       <div className="flex items-center mb-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex-grow">
+            <Button
+              variant="ghost"
+              className="flex-grow justify-start text-gray-500"
+            >
               + New
             </Button>
           </DropdownMenuTrigger>

@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { AlignJustify, Settings } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { PopoverDemo } from "./PopoverDemo";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -16,7 +18,12 @@ const Navbar: React.FC<NavbarProps> = ({
   toggleSettings,
   setDialogType,
 }) => {
-  const { user, logout, loading } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleUpgradeClick = () => {
+    navigate("/upgrade");
+  };
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-2 flex justify-between items-center transition-all duration-300">
@@ -28,8 +35,9 @@ const Navbar: React.FC<NavbarProps> = ({
           <span>Loading...</span>
         ) : user ? (
           <>
-            <Button variant="secondary" className="mr-2" onClick={logout}>
-              Log out
+            <PopoverDemo />
+            <Button className="mr-2" onClick={handleUpgradeClick}>
+              Upgrade
             </Button>
           </>
         ) : (
