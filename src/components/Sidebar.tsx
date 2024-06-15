@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronsLeft, Pencil, Upload, Search } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -16,24 +17,15 @@ interface SidebarProps {
   setDialogType: React.Dispatch<
     React.SetStateAction<"signUp" | "logIn" | null>
   >;
-  isLoggedIn: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   isSidebarOpen,
   toggleSidebar,
   setDialogType,
-  isLoggedIn,
 }) => {
   const navigate = useNavigate();
-
-  const handleWriteClick = () => {
-    if (!isLoggedIn) {
-      setDialogType("logIn");
-    } else {
-      // Handle the write action here if the user is logged in
-    }
-  };
+  const { user } = useAuth();
 
   const handleImportClick = () => {
     navigate("/import");
@@ -41,6 +33,14 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleUnriddleClick = () => {
     navigate("/new");
+  };
+
+  const handleWriteClick = () => {
+    if (!user) {
+      setDialogType("logIn");
+    } else {
+      // Handle the write action here if the user is logged in
+    }
   };
 
   return (

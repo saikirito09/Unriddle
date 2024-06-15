@@ -8,8 +8,8 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 interface MainContentProps {
   isSidebarOpen: boolean;
@@ -17,19 +17,18 @@ interface MainContentProps {
   setDialogType: React.Dispatch<
     React.SetStateAction<"signUp" | "logIn" | null>
   >;
-  isLoggedIn: boolean;
 }
 
 const MainContent: React.FC<MainContentProps> = ({
   isSidebarOpen,
   isSettingsOpen,
   setDialogType,
-  isLoggedIn,
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleWriteClick = () => {
-    if (!isLoggedIn) {
+    if (!user) {
       setDialogType("logIn");
     } else {
       // Handle the write action here if the user is logged in
@@ -42,9 +41,7 @@ const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <div
-      className={`flex-1 p-6 transition-all duration-300 ${
-        isSidebarOpen ? "ml-64" : ""
-      } ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
+      className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
     >
       <div className="mx-auto max-w-3xl my-10">
         <div className="mb-8">

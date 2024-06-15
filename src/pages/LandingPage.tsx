@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const LandingScreen: React.FC = () => {
   return (
-    <div>
+    <div className="font-inter">
       <div className="fixed top-0 w-full z-20 mx-6 backdrop-blur-lg bg-[#ffffffe1] flex justify-center">
         <div className="flex w-full justify-between items-center py-4 max-w-4xl mx-6 relative">
           <a

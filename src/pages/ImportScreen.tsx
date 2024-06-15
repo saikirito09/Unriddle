@@ -20,6 +20,14 @@ const ImportScreen: React.FC = () => {
     setIsSettingsOpen(!isSettingsOpen);
   };
 
+  const handleButtonClick = () => {
+    if (!isLoggedIn) {
+      setDialogType("logIn");
+    } else {
+      // Handle the action here if the user is logged in
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Navbar
@@ -43,18 +51,23 @@ const ImportScreen: React.FC = () => {
             <Upload className="h-12 w-12 mb-4" />
             <h2 className="text-2xl font-semibold mb-2">Import a file</h2>
             <p className="text-gray-500 mb-4">PDF or Markdown</p>
-            <Button className="mb-2 px-16 rounded-xl transform transition-transform duration-200 hover:scale-[1.03]">
+            <Button
+              className="mb-2 px-16 rounded-xl transform transition-transform duration-200 hover:scale-[1.03]"
+              onClick={handleButtonClick}
+            >
               Select files
             </Button>
             <Button
               variant="secondary"
               className="mb-2 px-16 rounded-xl transform transition-transform duration-200 hover:scale-[1.03]"
+              onClick={handleButtonClick}
             >
               Paste URL
             </Button>
             <Button
               variant="secondary"
               className="px-16 rounded-xl transform transition-transform duration-200 hover:scale-[1.03]"
+              onClick={handleButtonClick}
             >
               Paste text
             </Button>
