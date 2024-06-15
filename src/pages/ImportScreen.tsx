@@ -5,12 +5,13 @@ import SettingsPanel from "../components/SettingsPanel";
 import DialogBox from "../components/DialogBox";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 const ImportScreen: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [dialogType, setDialogType] = useState<"signUp" | "logIn" | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with your actual login state logic
+  const { user } = useAuth();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,7 +22,7 @@ const ImportScreen: React.FC = () => {
   };
 
   const handleButtonClick = () => {
-    if (!isLoggedIn) {
+    if (!user) {
       setDialogType("logIn");
     } else {
       // Handle the action here if the user is logged in
@@ -40,7 +41,7 @@ const ImportScreen: React.FC = () => {
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
           setDialogType={setDialogType}
-          isLoggedIn={isLoggedIn}
+          isLoggedIn={!!user} // Pass the user state as a boolean
         />
         <div
           className={`flex-1 p-6 transition-all duration-300 ${
