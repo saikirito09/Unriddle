@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronsLeft, Pencil, Upload, Search } from "lucide-react";
+import { v4 as uuidv4 } from "uuid"; // Import UUID
 import { useAuth } from "@/context/AuthContext";
 
 interface SidebarProps {
@@ -39,13 +40,14 @@ const Sidebar: React.FC<SidebarProps> = ({
     if (!user) {
       setDialogType("logIn");
     } else {
-      // Handle the write action here if the user is logged in
+      const newNotebookId = uuidv4(); // Generate a new UUID
+      navigate(`/b/${newNotebookId}`); // Navigate to the new notebook URL
     }
   };
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 flex flex-col ${
+      className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 p-4 transform transition-transform duration-300 flex flex-col w-64 ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
       // Add hover class to change the opacity of the icon
@@ -69,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex justify-between items-center mb-4">
         <button
           type="button"
-          className="text-2xl font-bold cursor-pointer"
+          className="text-2xl font-bold cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap"
           onClick={handleUnriddleClick}
         >
           unriddle
@@ -111,11 +113,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="mt-6">
         <p className="font-semibold mb-2">Welcome!</p>
         <ul>
-          <li className="mb-2">The Mechanism of Nuclear Fission</li>
-          <li className="mb-2">Possible Existence of a Neutron</li>
-          <li className="mb-2">HST star-forming Trails</li>
-          <li className="mb-2">The Network State</li>
-          <li className="mb-2">GDPR - Official Legal Text</li>
+          <li className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap w-60 text-sm">
+            The Mechanism of Nuclear Fission
+          </li>
+          <li className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap w-60 text-sm">
+            Possible Existence of a Neutron
+          </li>
+          <li className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap w-60 text-sm">
+            HST star-forming Trails
+          </li>
+          <li className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap w-60 text-sm">
+            The Network State
+          </li>
+          <li className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap w-60 text-sm">
+            GDPR - Official Legal Text
+          </li>
         </ul>
       </div>
     </div>

@@ -9,6 +9,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "@/context/AuthContext";
 
 interface MainContentProps {
@@ -31,7 +32,8 @@ const MainContent: React.FC<MainContentProps> = ({
     if (!user) {
       setDialogType("logIn");
     } else {
-      // Handle the write action here if the user is logged in
+      const newNotebookId = uuidv4();
+      navigate(`/b/${newNotebookId}`);
     }
   };
 
