@@ -39,7 +39,6 @@ const MainContent: React.FC<MainContentProps> = ({
     navigate("/import");
   };
 
-  // Get the first word of the user's display name
   const firstName = user?.displayName?.split(" ")[0] || "";
 
   return (
