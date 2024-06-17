@@ -11,12 +11,14 @@ interface NavbarProps {
   setDialogType: React.Dispatch<
     React.SetStateAction<"signUp" | "logIn" | null>
   >;
+  title: string; // Add title prop
 }
 
 const Navbar: React.FC<NavbarProps> = ({
   toggleSidebar,
   toggleSettings,
   setDialogType,
+  title, // Add title prop
 }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -27,9 +29,17 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-2 flex justify-between items-center transition-all duration-300">
-      <Button variant="ghost" className="mr-2 text-xl" onClick={toggleSidebar}>
-        <AlignJustify className="h-6 w-6" />
-      </Button>
+      <div className="flex items-center">
+        <Button
+          variant="ghost"
+          className="mr-2 text-xl"
+          onClick={toggleSidebar}
+        >
+          <AlignJustify className="h-6 w-6" />
+        </Button>
+        <span className="text-lg font-bold">{title}</span>{" "}
+        {/* Display the title */}
+      </div>
       <div className="flex items-center">
         {loading ? (
           <span>Loading...</span>
