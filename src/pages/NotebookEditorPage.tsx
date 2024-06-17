@@ -3,10 +3,6 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Schema } from "prosemirror-model";
 import { schema as basicSchema } from "prosemirror-schema-basic";
-import {
-  defaultMarkdownSerializer,
-  MarkdownSerializer,
-} from "prosemirror-markdown";
 import { history, undo, redo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -20,8 +16,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import debounce from "lodash/debounce";
 import FloatingToolbar from "@/components/FloatingToolbar";
 import OrderedMap from "orderedmap";
+import { saveUserData, loadUserData } from "@/utils/firestore";
 
-// Extend the basic schema to include bold, italic, and headers
 const nodes = OrderedMap.from(basicSchema.spec.nodes).update("heading", {
   attrs: { level: { default: 1 } },
   content: "inline*",
@@ -61,28 +57,6 @@ const marks = OrderedMap.from(basicSchema.spec.marks)
 
 const mySchema = new Schema({ nodes, marks });
 
-// Custom Markdown serializer
-const customMarkdownSerializer = new MarkdownSerializer(
-  {
-    ...defaultMarkdownSerializer.nodes,
-  },
-  {
-    ...defaultMarkdownSerializer.marks,
-    bold: {
-      open: "**",
-      close: "**",
-      mixable: true,
-      expelEnclosingWhitespace: true,
-    },
-    italic: {
-      open: "*",
-      close: "*",
-      mixable: true,
-      expelEnclosingWhitespace: true,
-    },
-  },
-);
-
 // Function to validate UUID format
 const isValidUUID = (uuid: string) => {
   const regex =
@@ -90,18 +64,7 @@ const isValidUUID = (uuid: string) => {
   return regex.test(uuid);
 };
 
-// Function to save data to localStorage
-const saveToLocalStorage = (key: string, data: any) => {
-  localStorage.setItem(key, JSON.stringify(data));
-};
-
-// Function to load data from localStorage
-const loadFromLocalStorage = (key: string) => {
-  const storageString = localStorage.getItem(key);
-  return storageString ? JSON.parse(storageString) : null;
-};
-
-export default function NotebookEditorPage() {
+const NotebookEditorPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [dialogType, setDialogType] = useState<null | string>(null);
@@ -124,9 +87,32 @@ export default function NotebookEditorPage() {
   }, [user, loading, notebookId, navigate]);
 
   useEffect(() => {
-    // Clear local storage when the component mounts
-    localStorage.clear();
-  }, []);
+    const loadData = async () => {
+      if (user) {
+        const userData = await loadUserData(user.uid);
+        if (userData) {
+          setTitle(userData.title);
+          const content = userData.editorContent;
+          const state = EditorState.create({
+            schema: mySchema,
+            plugins: [
+              history(),
+              keymap(baseKeymap),
+              keymap({ "Mod-z": undo, "Mod-y": redo }),
+            ],
+            doc: mySchema.nodeFromJSON(content),
+          });
+          setEditorState(state);
+
+          if (viewRef.current) {
+            viewRef.current.updateState(state);
+          }
+        }
+      }
+    };
+
+    loadData();
+  }, [user]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -138,9 +124,20 @@ export default function NotebookEditorPage() {
 
   const debouncedSaveTitle = useCallback(
     debounce((newTitle: string) => {
-      saveToLocalStorage("title", newTitle);
+      if (user) {
+        saveUserData(user.uid, { title: newTitle });
+      }
     }, 500),
-    [],
+    [user],
+  );
+
+  const debouncedSaveContent = useCallback(
+    debounce((newContent: any) => {
+      if (user) {
+        saveUserData(user.uid, { editorContent: newContent });
+      }
+    }, 2000),
+    [user],
   );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,8 +163,8 @@ export default function NotebookEditorPage() {
           const newState = view.state.apply(transaction);
           view.updateState(newState);
           setEditorState(newState);
-          const markdown = customMarkdownSerializer.serialize(newState.doc);
-          saveToLocalStorage("editorContent", markdown);
+          const content = newState.doc.toJSON();
+          debouncedSaveContent(content);
         },
       });
 
@@ -181,7 +178,7 @@ export default function NotebookEditorPage() {
         }
       };
     }
-  }, []);
+  }, [user, debouncedSaveContent]);
 
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -199,7 +196,7 @@ export default function NotebookEditorPage() {
         toggleSettings={toggleSettings}
         setDialogType={setDialogType}
         title={title}
-        isSidebarOpen={isSidebarOpen} // Pass the sidebar state
+        isSidebarOpen={isSidebarOpen}
       />
       <div className="flex flex-1 mt-14">
         <Sidebar
@@ -219,7 +216,7 @@ export default function NotebookEditorPage() {
             value={title}
             onChange={handleTitleChange}
             onKeyDown={handleTitleKeyDown}
-            className="text-5xl mb-4 w-full max-w-5xl text-left p-0 shadow-none"
+            className="text-5xl h-14 mb-4 w-full max-w-5xl text-left p-0 shadow-none"
             style={{
               border: "none",
               outline: "none",
@@ -245,4 +242,6 @@ export default function NotebookEditorPage() {
       <DialogBox dialogType={dialogType} setDialogType={setDialogType} />
     </div>
   );
-}
+};
+
+export default NotebookEditorPage;

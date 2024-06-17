@@ -1,9 +1,9 @@
+/* index.css or a similar main CSS file */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* index.css or a similar main CSS file */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 body {
     font-family: "Inter", sans-serif;
@@ -72,6 +72,7 @@ body {
         --ring: 212.7 26.8% 83.9%;
     }
 }
+
 /* Ensure no border, outline, or box-shadow by default */
 .prosemirror-editor {
     border: none;
@@ -80,7 +81,7 @@ body {
 }
 
 /* Change border color on focus */
-.ProseMirror focus {
+.ProseMirror:focus {
     border: 2px solid #4a90e2; /* Example color */
     outline: none;
     box-shadow: none;
