@@ -11,7 +11,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isSettingsOpen }) => {
 
   return (
     <div
-      className={`fixed top-14 right-0 h-full w-64 bg-white border-t border-l border-gray-200 p-4 transform transition-transform duration-300 ${
+      className={`fixed top-13 right-0 h-full w-64 bg-white border-t border-l border-gray-200 p-4 transform transition-transform duration-300 ${
         isSettingsOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >

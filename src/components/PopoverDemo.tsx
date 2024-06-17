@@ -11,7 +11,7 @@ export const PopoverDemo: React.FC = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className="mr-2">
+        <Button variant="secondary" className="mr-2 h-7 text-sm">
           Feedback
         </Button>
       </PopoverTrigger>
@@ -24,10 +24,10 @@ export const PopoverDemo: React.FC = () => {
               className="h-32 resize-none border-none focus:outline-none focus:border-none focus:ring-0"
             />
             <div className="flex justify-between gap-4 mt-4">
-              <Button variant="secondary" className="rounded-xl">
+              <Button variant="secondary" className="rounded-xl h-7 text-xs">
                 Cancel
               </Button>
-              <Button className="rounded-xl">Submit</Button>
+              <Button className="rounded-xl h-7 text-xs">Submit</Button>
             </div>
           </div>
         </div>

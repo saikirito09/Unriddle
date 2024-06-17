@@ -12,7 +12,7 @@ interface NavbarProps {
     React.SetStateAction<"signUp" | "logIn" | null>
   >;
   title: string;
-  isSidebarOpen: boolean; // Add sidebar state prop
+  isSidebarOpen: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -20,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({
   toggleSettings,
   setDialogType,
   title,
-  isSidebarOpen, // Add sidebar state prop
+  isSidebarOpen,
 }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -31,13 +31,15 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-2 flex justify-between items-center transition-all duration-300 ${isSidebarOpen ? "pl-64" : ""} font-inter`}
+      className={`fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-2 py-3 flex justify-between items-center transition-all duration-300 ${
+        isSidebarOpen ? "pl-64" : ""
+      } font-inter`}
     >
       <div className="flex items-center">
-        {!isSidebarOpen && ( // Conditionally render the hamburger menu
+        {!isSidebarOpen && (
           <Button
             variant="ghost"
-            className="mr-2 text-xl"
+            className="mr-2 h-7 text-sm" // Set height to 30px and font size to small
             onClick={toggleSidebar}
           >
             <AlignJustify className="h-6 w-6" />
@@ -51,7 +53,7 @@ const Navbar: React.FC<NavbarProps> = ({
         ) : user ? (
           <>
             <PopoverDemo />
-            <Button className="mr-2" onClick={handleUpgradeClick}>
+            <Button className="mr-2 h-7 text-sm" onClick={handleUpgradeClick}>
               Upgrade
             </Button>
           </>
@@ -59,22 +61,25 @@ const Navbar: React.FC<NavbarProps> = ({
           <>
             <Button
               variant="secondary"
-              className="mr-2"
+              className="mr-2 h-7 text-sm"
               onClick={() => setDialogType("logIn")}
             >
               Log in
             </Button>
-            <Button className="mr-2" onClick={() => setDialogType("signUp")}>
+            <Button
+              className="mr-2 h-7 text-sm"
+              onClick={() => setDialogType("signUp")}
+            >
               Sign up
             </Button>
           </>
         )}
         <Button
           variant="secondary"
-          className="p-2 text-black"
+          className="p-2 text-black h-7 text-sm"
           onClick={toggleSettings}
         >
-          <Settings className="h-6 w-6" />
+          <Settings className="h-5 w-5" />
         </Button>
       </div>
     </div>

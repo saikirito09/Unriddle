@@ -17,6 +17,7 @@ import debounce from "lodash/debounce";
 import FloatingToolbar from "@/components/FloatingToolbar";
 import OrderedMap from "orderedmap";
 import { saveUserData, loadUserData } from "@/utils/firestore";
+import { MessagesSquare, TextSearch, Ellipsis } from "lucide-react";
 
 const nodes = OrderedMap.from(basicSchema.spec.nodes).update("heading", {
   attrs: { level: { default: 1 } },
@@ -208,8 +209,19 @@ const NotebookEditorPage = () => {
         <div
           className={`flex-1 p-6 transition-all duration-300 ${
             isSidebarOpen ? "ml-64" : ""
-          } ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-center w-full h-full`}
+          } ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-center w-full h-full relative`}
         >
+          <div className="absolute top-4 right-6 flex space-x-2">
+            <div className="p-2 rounded-sm hover:bg-gray-200 cursor-pointer">
+              <TextSearch className="h-4 w-4" />
+            </div>
+            <div className="p-2 rounded-sm hover:bg-gray-200 cursor-pointer">
+              <MessagesSquare className="h-4 w-4" />
+            </div>
+            <div className="p-2 rounded-sm hover:bg-gray-200 cursor-pointer">
+              <Ellipsis className="h-4 w-4" />
+            </div>
+          </div>
           <Input
             type="text"
             placeholder="Give it a title"
