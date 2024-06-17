@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { schema } from "prosemirror-schema-basic";
-import { defaultMarkdownSerializer } from "prosemirror-markdown";
+import { Schema } from "prosemirror-model";
+import { schema as basicSchema } from "prosemirror-schema-basic";
+import {
+  defaultMarkdownSerializer,
+  MarkdownSerializer,
+} from "prosemirror-markdown";
 import { history, undo, redo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
@@ -15,6 +19,69 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 import debounce from "lodash/debounce";
 import FloatingToolbar from "@/components/FloatingToolbar";
+import OrderedMap from "orderedmap";
+
+// Extend the basic schema to include bold, italic, and headers
+const nodes = OrderedMap.from(basicSchema.spec.nodes).update("heading", {
+  attrs: { level: { default: 1 } },
+  content: "inline*",
+  group: "block",
+  defining: true,
+  parseDOM: [
+    { tag: "h1", attrs: { level: 1 } },
+    { tag: "h2", attrs: { level: 2 } },
+    { tag: "h3", attrs: { level: 3 } },
+  ],
+  toDOM(node) {
+    return ["h" + node.attrs.level, 0];
+  },
+});
+
+const marks = OrderedMap.from(basicSchema.spec.marks)
+  .addToEnd("bold", {
+    parseDOM: [
+      { tag: "strong" },
+      {
+        tag: "b",
+        getAttrs: (node) => node.style.fontWeight !== "normal" && null,
+      },
+    ],
+    toDOM: () => ["strong", 0],
+  })
+  .addToEnd("italic", {
+    parseDOM: [
+      { tag: "em" },
+      {
+        tag: "i",
+        getAttrs: (node) => node.style.fontStyle !== "normal" && null,
+      },
+    ],
+    toDOM: () => ["em", 0],
+  });
+
+const mySchema = new Schema({ nodes, marks });
+
+// Custom Markdown serializer
+const customMarkdownSerializer = new MarkdownSerializer(
+  {
+    ...defaultMarkdownSerializer.nodes,
+  },
+  {
+    ...defaultMarkdownSerializer.marks,
+    bold: {
+      open: "**",
+      close: "**",
+      mixable: true,
+      expelEnclosingWhitespace: true,
+    },
+    italic: {
+      open: "*",
+      close: "*",
+      mixable: true,
+      expelEnclosingWhitespace: true,
+    },
+  },
+);
 
 // Function to validate UUID format
 const isValidUUID = (uuid: string) => {
@@ -38,7 +105,7 @@ export default function NotebookEditorPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [dialogType, setDialogType] = useState<null | string>(null);
-  const [title, setTitle] = useState("Title");
+  const [title, setTitle] = useState("");
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -85,7 +152,7 @@ export default function NotebookEditorPage() {
   useEffect(() => {
     if (editorContainerRef.current) {
       const state = EditorState.create({
-        schema,
+        schema: mySchema,
         plugins: [
           history(),
           keymap(baseKeymap),
@@ -99,7 +166,7 @@ export default function NotebookEditorPage() {
           const newState = view.state.apply(transaction);
           view.updateState(newState);
           setEditorState(newState);
-          const markdown = defaultMarkdownSerializer.serialize(newState.doc);
+          const markdown = customMarkdownSerializer.serialize(newState.doc);
           saveToLocalStorage("editorContent", markdown);
         },
       });
@@ -147,16 +214,26 @@ export default function NotebookEditorPage() {
         >
           <Input
             type="text"
-            placeholder="Title"
+            placeholder="Give it a title"
             value={title}
             onChange={handleTitleChange}
             onKeyDown={handleTitleKeyDown}
-            className="text-5xl mb-4 w-[48%] text-left border-none p-0 outline-none shadow-none"
+            className="text-5xl mb-4 w-[48%] text-left p-0 shadow-none"
+            style={{
+              border: "none",
+              outline: "none",
+              boxShadow: "none",
+            }}
           />
           <div
             id="editor"
             ref={editorContainerRef}
-            className="w-full h-full max-w-6xl bg-white p-6 rounded-lg overflow-auto flex-grow relative"
+            className="w-[48%] h-full bg-white py-3 rounded-lg overflow-auto flex-grow relative prosemirror-editor"
+            style={{
+              border: "none",
+              outline: "none",
+              boxShadow: "none",
+            }}
           ></div>
           {editorState && viewRef.current && (
             <FloatingToolbar editorView={viewRef.current} state={editorState} />

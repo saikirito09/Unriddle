@@ -2,7 +2,49 @@ import React, { useEffect, useRef } from "react";
 import { EditorView } from "prosemirror-view";
 import { EditorState } from "prosemirror-state";
 import { toggleMark, setBlockType } from "prosemirror-commands";
-import { schema } from "prosemirror-schema-basic";
+import { Schema } from "prosemirror-model";
+import { schema as basicSchema } from "prosemirror-schema-basic";
+import OrderedMap from "orderedmap";
+
+// Define marks and nodes for floating toolbar commands
+const nodes = OrderedMap.from(basicSchema.spec.nodes).update("heading", {
+  attrs: { level: { default: 1 } },
+  content: "inline*",
+  group: "block",
+  defining: true,
+  parseDOM: [
+    { tag: "h1", attrs: { level: 1 } },
+    { tag: "h2", attrs: { level: 2 } },
+    { tag: "h3", attrs: { level: 3 } },
+  ],
+  toDOM(node) {
+    return ["h" + node.attrs.level, 0];
+  },
+});
+
+const marks = OrderedMap.from(basicSchema.spec.marks)
+  .addToEnd("bold", {
+    parseDOM: [
+      { tag: "strong" },
+      {
+        tag: "b",
+        getAttrs: (node) => node.style.fontWeight !== "normal" && null,
+      },
+    ],
+    toDOM: () => ["strong", 0],
+  })
+  .addToEnd("italic", {
+    parseDOM: [
+      { tag: "em" },
+      {
+        tag: "i",
+        getAttrs: (node) => node.style.fontStyle !== "normal" && null,
+      },
+    ],
+    toDOM: () => ["em", 0],
+  });
+
+const mySchema = new Schema({ nodes, marks });
 
 interface FloatingToolbarProps {
   editorView: EditorView;
@@ -55,20 +97,20 @@ const FloatingToolbar: React.FC<FloatingToolbarProps> = ({
       className="floating-toolbar absolute bg-white border border-gray-300 rounded shadow-md p-2 z-10"
     >
       <button
-        onClick={() => applyCommand(toggleMark(schema.marks.bold))}
+        onClick={() => applyCommand(toggleMark(mySchema.marks.bold))}
         className="px-2 py-1 m-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
       >
         Bold
       </button>
       <button
-        onClick={() => applyCommand(toggleMark(schema.marks.italic))}
+        onClick={() => applyCommand(toggleMark(mySchema.marks.italic))}
         className="px-2 py-1 m-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
       >
         Italic
       </button>
       <button
         onClick={() =>
-          applyCommand(setBlockType(schema.nodes.heading, { level: 1 }))
+          applyCommand(setBlockType(mySchema.nodes.heading, { level: 1 }))
         }
         className="px-2 py-1 m-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
       >
@@ -76,7 +118,7 @@ const FloatingToolbar: React.FC<FloatingToolbarProps> = ({
       </button>
       <button
         onClick={() =>
-          applyCommand(setBlockType(schema.nodes.heading, { level: 2 }))
+          applyCommand(setBlockType(mySchema.nodes.heading, { level: 2 }))
         }
         className="px-2 py-1 m-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
       >
@@ -84,7 +126,7 @@ const FloatingToolbar: React.FC<FloatingToolbarProps> = ({
       </button>
       <button
         onClick={() =>
-          applyCommand(setBlockType(schema.nodes.heading, { level: 3 }))
+          applyCommand(setBlockType(mySchema.nodes.heading, { level: 3 }))
         }
         className="px-2 py-1 m-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
       >
