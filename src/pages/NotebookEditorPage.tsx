@@ -199,6 +199,7 @@ export default function NotebookEditorPage() {
         toggleSettings={toggleSettings}
         setDialogType={setDialogType}
         title={title}
+        isSidebarOpen={isSidebarOpen} // Pass the sidebar state
       />
       <div className="flex flex-1 mt-14">
         <Sidebar
@@ -218,7 +219,7 @@ export default function NotebookEditorPage() {
             value={title}
             onChange={handleTitleChange}
             onKeyDown={handleTitleKeyDown}
-            className="text-5xl mb-4 w-[48%] text-left p-0 shadow-none"
+            className="text-5xl mb-4 w-full max-w-5xl text-left p-0 shadow-none"
             style={{
               border: "none",
               outline: "none",
@@ -228,7 +229,7 @@ export default function NotebookEditorPage() {
           <div
             id="editor"
             ref={editorContainerRef}
-            className="w-[48%] h-full bg-white py-3 rounded-lg overflow-auto flex-grow relative prosemirror-editor"
+            className="w-full max-w-5xl text-left h-full bg-white py-3 rounded-lg overflow-auto flex-grow relative prosemirror-editor"
             style={{
               border: "none",
               outline: "none",

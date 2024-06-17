@@ -45,7 +45,7 @@ const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <div
-      className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start`}
+      className={`flex-1 p-6 transition-all duration-300 ${isSidebarOpen ? "ml-64" : ""} ${isSettingsOpen ? "mr-64" : ""} flex flex-col items-start font-inter`}
     >
       <div className="mx-auto max-w-3xl my-10">
         <div className="mb-8">
